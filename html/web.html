@@ -1,11 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    
+    <div id="booksStorePage">
+        <nav id="myTopnav" class="topnav">
+            <div clas="navheader">
+                <h1>Bookshop ERP</h1>
+            </div>
+            <div class="myLinks">
+                <a id="link" href="">+ New book</a>
+                <a id="link" href="">Load Data</a>
+            </div>
+        </nav>
+        <div id="bookstoreContent">
+            <div id="booklistShow">
+                <div id="bookslist">
+
+                </div>
+                <div id="listScroll"></div>
+            </div>
+            <div id="bookShow">
+                <div id="bookShowHeader">
+
+                </div>
+                <div id="bookShowCard">
+                    <div id="bookimg">
+                        <img src="">
+                    </div>
+                    <div id="cardTxt">
+                        <p id="bookprice"></p>
+                        <div id="bookrate">
+                            <label>
+                                Rate:
+                                <input type="range" min="0" max="120" name="age" value="0" oninput="this.nextElementSibling.value = this.value"/>
+                                <output>0</output> 
+                            </label><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
