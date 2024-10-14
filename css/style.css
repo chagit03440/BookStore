@@ -1,0 +1,103 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+#booksStorePage {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.topnav {
+    background-color: white;
+    color: #333;
+    top: 0;
+    width: 100%;
+}
+
+#navheader {
+    display: inline;
+    margin: 0;
+}
+
+.myLinks {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color:#333;
+    width: 100%;
+}
+
+#navLink {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+}
+
+#navLink :hover {
+    background-color: #575757;
+}
+
+#bookstoreContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 50px; 
+    padding: 20px;
+    width: 80%;
+}
+#booklistShow{
+    width: 70%;
+}
+#bookslist {
+    width: 100%;
+    border-collapse: collapse;
+}
+#bookslistTable{
+    width: 100%;
+}
+.bookListTh{
+    padding: 8px;
+    text-align: left;
+    background-color: #c0bbbb;
+    cursor: pointer; 
+}
+.bookListTd
+{
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.sort-arrow {
+    margin-left: 5px;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.crud-options {
+    display: flex;
+    gap: 30px;
+}
+
+.crud-icon {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.crud-option:hover {
+    color: red;
+}
+#listScroll{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+.scrollBtn{
+    background-color: blueviolet;
+    color: white;
+    width: 20%;
+   
+}

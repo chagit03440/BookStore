@@ -5,48 +5,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <div id="booksStorePage">
         <nav id="myTopnav" class="topnav">
             <div clas="navheader">
-                <h1>Bookshop ERP</h1>
+                <h1 id="navheader">Bookshop ERP</h1>
             </div>
             <div class="myLinks">
-                <a id="link" href="">+ New book</a>
-                <a id="link" href="">Load Data</a>
+                <a id="navLink" href="">+ New book</a>
+                <a id="navLink" href="">Load Data</a>
             </div>
         </nav>
         <div id="bookstoreContent">
             <div id="booklistShow">
                 <div id="bookslist">
-
+                    <table id="bookslistTable">
+                        <thead>
+                            <tr>
+                                <th class="bookListTh">ID</th>
+                                <th class="bookListTh">
+                                    Title
+                                    <span class="sort-arrow" id="titleArrow">▲</span>
+                                </th>
+                                <th class="bookListTh">
+                                    Price
+                                    <span class="sort-arrow" id="priceArrow">▲</span>
+                                </th>
+                                <th class="bookListTh">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="booklistTbody">
+                            <!-- Books will be dynamically inserted here -->
+                        </tbody>
+                    </table>
                 </div>
-                <div id="listScroll"></div>
+                <div id="listScroll">
+                    <button class="scrollBtn" id="backBtn">Back</button>
+                    <button class="scrollBtn" id="nextBtn">Next</button>
+                </div>
             </div>
             <div id="bookShow">
                 <div id="bookShowHeader">
-
+                    <p id="bookHeader"></p>
                 </div>
                 <div id="bookShowCard">
                     <div id="bookimg">
                         <img src="">
                     </div>
                     <div id="cardTxt">
-                        <p id="bookprice"></p>
+                        <p id="bookprice">
+                            Price: <span id="priceValue">0</span>
+                        </p>
                         <div id="bookrate">
-                            <label>
-                                Rate:
-                                <input type="range" min="0" max="120" name="age" value="0" oninput="this.nextElementSibling.value = this.value"/>
-                                <output>0</output> 
-                            </label><br>
+                            <label for="rateValueLabel">Rate:</label>
+                            <button type="button" onclick="changeRate(-1)">-</button>
+                            <span id="rateValueLabel">0</span>
+                            <button type="button" onclick="changeRate(1)">+</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script type="module" src="/js/script.js"></script>
 </body>
 
 </html>
