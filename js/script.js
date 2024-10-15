@@ -27,15 +27,34 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
-    const bookShow = document.getElementById("bookShow");
-    bookShow.style.display = "none";
+
+    const bookShowContent = document.getElementById("bookShowContent");
+    bookShowContent.style.display = "none";
+
+    // Add sorting event listeners to title and price arrows
+    const titleArrow = document.getElementById('titleArrow');
+    const priceArrow = document.getElementById('priceArrow');
+
+    titleArrow.addEventListener('click', () => {
+        sortBooks('title');
+    });
+
+    priceArrow.addEventListener('click', () => {
+        sortBooks('price');
+    });
 
     // Event listener for the "+ New book" button
     const newBookLink = document.getElementById('newBookLink');
-    newBookLink.addEventListener('click', () => {
-        addBook();
+
+    // Prevent default behavior and stop propagation of other listeners
+    newBookLink.addEventListener('click', (event) => {
+        event.preventDefault();  // Prevent any default link behavior
+        event.stopPropagation(); // Stop any other events related to the link
+        showForm('Add');         // Open the form
     });
+
 });
+
 
 // Function to display books in the table
 function displayBooks(books) {
@@ -69,106 +88,7 @@ function displayBooks(books) {
         deleteBookSpan.classList = "crud-option";
         deleteBookSpan.innerText = "🗑️";
 
-        // Create a wrapper for modal content
-        const modalContentWrapper = document.createElement('div');
-        modalContentWrapper.classList.add('modal-content-wrapper'); // New wrapper class
 
-        // Create the modal container div
-        const modal = document.createElement('div');
-        modal.id = "myModal";
-        modal.classList.add('modal');
-
-        const popNav = document.createElement('div');
-        popNav.id = "popNav";
-        popNav.classList.add('popNav');
-
-
-        // Create the close button (span) for the modal
-        const closebtn = document.createElement('btn');
-        closebtn.classList.add('close');
-        closebtn.innerHTML = "X";  // X button to close modal
-        closebtn.fdprocessedid = "whwffp";
-
-        popNav.appendChild(closebtn);
-
-        const popContent = document.createElement('div');
-        popContent.id = "popContent";
-        popContent.classList.add('modal-content');
-
-        const popParagraph = document.createElement('p');
-        popParagraph.id = "popParagraph";
-        popParagraph.classList.add('popContent');
-
-        const popIdLabel = document.createElement('label');
-        popIdLabel.id = "popIdLabel";
-        popIdLabel.classList.add('popLabel');
-        popIdLabel.innerText = "Id"
-
-        const popIdInput = document.createElement('input');
-        popIdInput.id = "popIdInput";
-        popIdInput.classList.add('popInput');
-        popIdInput.type = "text";
-
-        popIdLabel.appendChild(popIdInput);
-
-        const popTitleLabel = document.createElement('label');
-        popTitleLabel.id = "popTitleLabel";
-        popTitleLabel.classList.add('popLabel');
-        popTitleLabel.innerText = "Title"
-
-        const popTitleInput = document.createElement('input');
-        popTitleInput.id = "popTitleInput";
-        popTitleInput.classList.add('popInput');
-        popTitleInput.type = "text";
-
-        popTitleLabel.appendChild(popTitleInput);
-
-        // Create label for Price
-        const popPriceLabel = document.createElement('label');
-        popPriceLabel.id = "popPriceLabel";
-        popPriceLabel.classList.add('popLabel');
-        popPriceLabel.innerText = "Price";
-
-        // Create input for Price
-        const popPriceInput = document.createElement('input');
-        popPriceInput.id = "popPriceInput";
-        popPriceInput.classList.add('popInput');
-
-        // Append input to the label
-        popPriceLabel.appendChild(popPriceInput);
-
-        // Create label for Image URL
-        const popImgUrlLabel = document.createElement('label');
-        popImgUrlLabel.id = "popImgUrlLabel";
-        popImgUrlLabel.classList.add('popLabel');
-        popImgUrlLabel.innerText = "Cover Image URL";
-
-        // Create input for Image URL
-        const popImgUrlInput = document.createElement('input');
-        popImgUrlInput.id = "popImgUrlInput";
-        popImgUrlInput.classList.add('popInput');
-        popImgUrlInput.type = "text";  // Use text type for image URL
-
-        // Append input to the label
-        popImgUrlLabel.appendChild(popImgUrlInput);
-
-        const popBtn = document.createElement('button');
-        popBtn.id = "popBtn";
-        popBtn.classList.add('popBtn');
-
-
-        popContent.appendChild(popParagraph);
-        popContent.appendChild(popIdLabel);
-        popContent.appendChild(popTitleLabel);
-        popContent.appendChild(popPriceLabel);
-        popContent.appendChild(popImgUrlLabel);
-        popContent.appendChild(popBtn);
-
-        modalContentWrapper.appendChild(popNav);
-        modalContentWrapper.appendChild(popContent);
-
-        // Append the wrapper to the modal
-        modal.appendChild(modalContentWrapper);
 
         bookTdCrud.appendChild(readBookSpan);
         bookTdCrud.appendChild(updateBookSpan);
@@ -178,22 +98,15 @@ function displayBooks(books) {
         row.appendChild(bookTdTitle);
         row.appendChild(bookTdPrice);
         row.appendChild(bookTdCrud);
-        row.appendChild(modal);
-
 
         booksList.appendChild(row);
-
-        // Close the modal when the close button (X) is clicked
-        closebtn.onclick = function () {
-            modal.style.display = "none";
-        };
 
         readBookSpan.addEventListener('click', () => {
             readBook(book);
         });
 
         updateBookSpan.addEventListener('click', () => {
-            updateBook(book);
+            showForm('Update', book);
         });
         deleteBookSpan.addEventListener('click', () => {
             deleteBook(book);
@@ -203,98 +116,17 @@ function displayBooks(books) {
 }
 
 // CRUD functions (read, update, delete)
-function addBook() {
+function addBook(book) {
 
-    let book = {};
-    const modal = document.getElementById('myModal');
-    modal.style.display = "block";
+    let storedBooks = localStorage.getItem('books');
+    books = storedBooks ? JSON.parse(storedBooks) : [];
 
-    const popNav = document.getElementById('popParagraph');
-    popNav.innerText = "Add Book";
+    const existingItem = books.find(bookItem => bookItem.id === book.id);
 
-    const popBtn = document.getElementById('popBtn');
-    popBtn.innerText = "Add";
-
-
-
-    // Remove previous click listeners to prevent multiple triggers
-    popBtn.replaceWith(popBtn.cloneNode(true));
-    const newPopBtn = document.getElementById('popBtn');
-
-    // Add the event listener for adding a new book
-    newPopBtn.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent any default behavior (if form behavior exists)
-
-        // Assign values from the modal's input fields
-        book.id = popIdInput.value;
-        book.title = poptitleInput.value;
-        book.price = popPriceInput.value;
-        book.img = popImgUrlInput.value;
-
-        let storedBooks = localStorage.getItem('books');
-        books = storedBooks ? JSON.parse(storedBooks) : [];
-
-        const existingItem = books.find(bookItem => bookItem.id === book.id);
-
-        if (existingItem) {
-            alert("Book ID already exists");
-        } else {
-            books.push(book);
-
-            // Save the updated books to localStorage
-            localStorage.setItem('books', JSON.stringify(books));
-
-            // Re-render the table with the updated data
-            displayBooks(books);
-
-            alert("Added Book with ID: " + book.id);
-
-            // Close the modal
-            modal.style.display = "none";
-        }
-    });
-}
-function readBook(book) {
-
-}
-
-function updateBook(book) {
-    const modal = document.getElementById('myModal');
-    modal.style.display = "block";
-
-    const popNav = document.getElementById('popParagraph');
-    popNav.innerText = "Update Book";
-
-    const popIdInput = document.getElementById('popIdInput');
-    popIdInput.value = book.id;
-
-    const poptitleInput = document.getElementById('popTitleInput');
-    poptitleInput.value = book.title;
-
-    const popPriceInput = document.getElementById('popPriceInput');
-    popPriceInput.value = book.price;
-
-    const popImgUrlInput = document.getElementById('popImgUrlInput');
-    popImgUrlInput.value = book.img;
-
-    const popBtn = document.getElementById('popBtn');
-    popBtn.innerText = "Update";
-
-    popBtn.addEventListener('click', () => {
-        let storedBooks = localStorage.getItem('books');
-        books = storedBooks ? JSON.parse(storedBooks) : [];
-
-
-        const existingItem = books.find(bookItem => bookItem.id === book.id);
-
-        if (existingItem) {
-            existingItem.id = popIdInput.value;
-            existingItem.title = poptitleInput.value;
-            existingItem.price = popPriceInput.value;
-            existingItem.img = popImgUrlInput.value;
-        } else {
-            alert("book not exist");
-        }
+    if (existingItem) {
+        alert("Book ID already exists");
+    } else {
+        books.push(book);
 
         // Save the updated books to localStorage
         localStorage.setItem('books', JSON.stringify(books));
@@ -302,11 +134,69 @@ function updateBook(book) {
         // Re-render the table with the updated data
         displayBooks(books);
 
-        alert("updated" + book.id);
+        alert("Added Book with ID: " + book.id);
+    }
+}
+
+function readBook(book) {
+    const bookShowContent = document.getElementById("bookShowContent");
+    const bookHeader = document.getElementById("bookHeader");
+    const bookImg = document.getElementById("bookimg").getElementsByTagName("img")[0];
+    const priceValue = document.getElementById("priceValue");
+    const rateValueLabel = document.getElementById("rateValueLabel");
+
+    bookHeader.textContent = book.title;
+    bookImg.src = book.img || '';
+    priceValue.textContent = book.price;
+    rateValueLabel.innerText = book.rate || 0;
+
+    document.getElementById('closeShowbook').addEventListener('click', () => {
+        bookShowContent.style.display = 'none';
     });
 
+    // Reset event listeners for rate buttons
+    const plusButton = document.getElementById('plusButton');
+    const minusButton = document.getElementById('minusButton');
 
+    plusButton.replaceWith(plusButton.cloneNode(true));
+    minusButton.replaceWith(minusButton.cloneNode(true));
+
+    document.getElementById('plusButton').addEventListener('click', () => {
+        changeRate(1, book);
+    });
+    document.getElementById('minusButton').addEventListener('click', () => {
+        changeRate(-1, book);
+    });
+
+    bookShowContent.style.display = "block";
 }
+
+
+
+function updateBook(book) {
+    let storedBooks = localStorage.getItem('books');
+    books = storedBooks ? JSON.parse(storedBooks) : [];
+
+    const existingItem = books.find(bookItem => String(bookItem.id) === String(book.id));
+
+    if (existingItem) {
+        // Update the book details
+        existingItem.title = book.title;
+        existingItem.price = book.price;
+        existingItem.img = book.img;
+
+        // Save the updated books to localStorage
+        localStorage.setItem('books', JSON.stringify(books));
+
+        // Re-render the table with the updated data
+        displayBooks(books);
+
+        alert("Updated book with ID: " + book.id);
+    } else {
+        alert("Book not found");
+    }
+}
+
 
 function deleteBook(book) {
     let storedBooks = localStorage.getItem('books');
@@ -331,12 +221,142 @@ function deleteBook(book) {
         alert("Book not found!");
     }
 }
+function showForm(type, book = null) {
+    const modalContentWrapper = document.createElement('div');
+    modalContentWrapper.classList.add('modal-content-wrapper');
+
+    const modal = document.createElement('div');
+    modal.id = "myModal";
+    modal.classList.add('modal');
+
+    const popNav = document.createElement('div');
+    popNav.id = "popNav";
+    popNav.classList.add('popNav');
+
+    const closebtn = document.createElement('btn');
+    closebtn.classList.add('close');
+    closebtn.innerHTML = "X";
+    closebtn.onclick = function () {
+        modal.style.display = "none";
+    };
+    popNav.appendChild(closebtn);
+
+    const popContent = document.createElement('div');
+    popContent.id = "popContent";
+    popContent.classList.add('modal-content');
+
+    const popParagraph = document.createElement('p');
+    popParagraph.id = "popParagraph";
+    popParagraph.classList.add('popContent');
+    popParagraph.innerText = type === 'Add' ? '+ New Book' : 'Update Book'; // Title based on form type
+
+    popContent.appendChild(popParagraph); // Add the title to the form first
+
+    // Only show the Id label and input when adding a new book
+    if (type === 'Add') {
+        const popIdLabel = document.createElement('label');
+        popIdLabel.id = "popIdLabel";
+        popIdLabel.classList.add('popLabel');
+        popIdLabel.innerText = "Id";
+
+        const popIdInput = document.createElement('input');
+        popIdInput.id = "popIdInput";
+        popIdInput.classList.add('popInput');
+        popIdInput.type = "text";
+
+        // Append the input to the label (this step was missing in the original code)
+        popContent.appendChild(popIdLabel);
+        popContent.appendChild(popIdInput); // Correct place to append the input
+    }
+
+    const popTitleLabel = document.createElement('label');
+    popTitleLabel.id = "popTitleLabel";
+    popTitleLabel.classList.add('popLabel');
+    popTitleLabel.innerText = "Title";
+    const popTitleInput = document.createElement('input');
+    popTitleInput.id = "popTitleInput";
+    popTitleInput.classList.add('popInput');
+    popTitleInput.type = "text";
+    popTitleInput.value = book ? book.title : ''; // Prefill if updating
+    popTitleLabel.appendChild(popTitleInput);
+
+    const popPriceLabel = document.createElement('label');
+    popPriceLabel.id = "popPriceLabel";
+    popPriceLabel.classList.add('popLabel');
+    popPriceLabel.innerText = "Price";
+    const popPriceInput = document.createElement('input');
+    popPriceInput.id = "popPriceInput";
+    popPriceInput.classList.add('popInput');
+    popPriceInput.type = "text";
+    popPriceInput.value = book ? book.price : ''; // Prefill if updating
+    popPriceLabel.appendChild(popPriceInput);
+
+    const popImgUrlLabel = document.createElement('label');
+    popImgUrlLabel.id = "popImgUrlLabel";
+    popImgUrlLabel.classList.add('popLabel');
+    popImgUrlLabel.innerText = "Cover Image URL";
+    const popImgUrlInput = document.createElement('input');
+    popImgUrlInput.id = "popImgUrlInput";
+    popImgUrlInput.classList.add('popInput');
+    popImgUrlInput.type = "text";
+    popImgUrlInput.value = book ? book.img : ''; // Prefill if updating
+    popImgUrlLabel.appendChild(popImgUrlInput);
+
+    const popBtn = document.createElement('button');
+    popBtn.id = "popBtn";
+    popBtn.classList.add('popBtn');
+    popBtn.innerText = type === 'Add' ? 'Add' : 'Update'; // Button text based on form type
+
+    // Attach the correct event listener based on form type
+    if (type === 'Add') {
+        popBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            addBook({
+                id: popIdInput.value, 
+                title: popTitleInput.value,
+                price: popPriceInput.value,
+                img: popImgUrlInput.value
+            });
+            modal.style.display = "none"; // Close the modal
+        });
+    } else if (type === 'Update') {
+        popBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            updateBook({
+                id: book.id, // Use the original book's id for the update
+                title: popTitleInput.value,
+                price: popPriceInput.value,
+                img: popImgUrlInput.value
+            });
+            modal.style.display = "none"; // Close the modal
+        });
+    }
+    // Append everything to the modal content
+    popContent.appendChild(popTitleLabel);
+    popContent.appendChild(popPriceLabel);
+    popContent.appendChild(popImgUrlLabel);
+    popContent.appendChild(popBtn);
+    modalContentWrapper.appendChild(popNav);
+    modalContentWrapper.appendChild(popContent);
+    modal.appendChild(modalContentWrapper);
+
+    // Append the modal to the body
+    document.body.appendChild(modal);
+
+    // Show the modal
+    modal.style.display = "block";
+}
+
 
 // Sort function (existing code)
 let titleSortDirection = true; // true for ascending, false for descending
 let priceSortDirection = true;
 
 function sortBooks(property) {
+
+    let storedBooks = localStorage.getItem('books');
+    books = storedBooks ? JSON.parse(storedBooks) : [];
+
     if (property === 'title') {
         titleSortDirection = !titleSortDirection; // Toggle sort direction
         books.sort((a, b) => titleSortDirection ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
@@ -346,23 +366,42 @@ function sortBooks(property) {
         books.sort((a, b) => priceSortDirection ? a.price - b.price : b.price - a.price);
         document.getElementById("priceArrow").innerHTML = priceSortDirection ? '▲' : '▼'; // Change arrow direction
     }
-    displayBooks(); // Refresh the book list
+    // Save the updated books to localStorage
+    localStorage.setItem('books', JSON.stringify(books));
+
+    displayBooks(books); // Refresh the book list
 }
 
 
-let currentRate = 0; // Initial rate value
 
-function changeRate(change) {
-    // Update current rate based on button click
-    currentRate += change;
+function changeRate(change, book) {
+    let storedBooks = localStorage.getItem('books');
+    let books = storedBooks ? JSON.parse(storedBooks) : [];
 
-    // Ensure the rate stays within the desired limits (0-10)
-    if (currentRate < 0) {
-        currentRate = 0;
-    } else if (currentRate > 10) {
-        currentRate = 10;
+    // Find the book in the stored books
+    const bookIndex = books.findIndex(bookItem => bookItem.id === book.id);
+
+    if (bookIndex !== -1) {
+        // Update current rate based on button click
+        let currentRate = books[bookIndex].rate || 0; // Default to 0 if no rate exists
+        currentRate += change;
+
+        // Ensure the rate stays within the desired limits (0-10)
+        if (currentRate < 0) {
+            currentRate = 0;
+        } else if (currentRate > 10) {
+            currentRate = 10;
+        }
+
+        // Update the displayed rate value
+        document.getElementById("rateValueLabel").innerText = currentRate;
+
+        // Update the rate value of the book
+        books[bookIndex].rate = currentRate;
+
+        // Save the updated books to localStorage
+        localStorage.setItem('books', JSON.stringify(books));
+    } else {
+        console.error('Book not found in localStorage.');
     }
-
-    // Update the displayed rate value
-    document.getElementById("rateValueLabel").textContent = currentRate;
 }

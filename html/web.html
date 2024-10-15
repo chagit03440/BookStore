@@ -48,24 +48,27 @@
                 </div>
             </div>
             <div id="bookShow">
-                <div id="bookShowHeader">
-                    <p id="bookHeader"></p>
-                </div>
-                <div id="bookShowCard">
-                    <div id="bookimg">
-                        <img src="">
+                <div id="bookShowContent">
+                    <div id="bookShowHeader">
+                        <p id="bookHeader"></p>
                     </div>
-                    <div id="cardTxt">
-                        <p id="bookprice">
-                            Price: <span id="priceValue">0</span>
-                        </p>
-                        <div id="bookrate">
-                            <label for="rateValueLabel">Rate:</label>
-                            <button type="button" onclick="changeRate(-1)">-</button>
-                            <span id="rateValueLabel">0</span>
-                            <button type="button" onclick="changeRate(1)">+</button>
+                    <div id="bookShowCard">
+                        <div id="bookimg">
+                            <img id="bookImg" src="">
+                        </div>
+                        <div id="cardTxt">
+                            <p id="bookprice">
+                                Price: <span id="priceValue">0</span>
+                            </p>
+                            <div id="bookrate">
+                                <label for="rateValueLabel">Rate:</label>
+                                <button class="rateBtn" id="minusButton" type="button">-</button>
+                                <span id="rateValueLabel">0</span>
+                                <button class="rateBtn" id="plusButton" type="button">+</button>
+                            </div>
                         </div>
                     </div>
+                    <button id="closeShowbook">close</button>
                 </div>
             </div>
         </div>

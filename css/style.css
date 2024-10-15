@@ -1,12 +1,14 @@
-*{
+* {
     font-family: Arial, Helvetica, sans-serif;
 }
+
 #booksStorePage {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
     width: 100%;
+    background-color: #f3e5f5;
 }
 
 .topnav {
@@ -25,7 +27,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color:#333;
+    background-color: #333;
     width: 100%;
 }
 
@@ -43,37 +45,113 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 50px; 
-    padding: 20px;
-    width: 80%;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 5px;
+    width: 100%;
 }
-#booklistShow{
+
+#bookShow {
+    position: relative;
+    width: 30%;
+    background-color: white;
+    margin-left: 10px;
+}
+
+#bookShowCard {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
+
+#cardTxt {
+    margin-left: 20px;
+}
+#bookHeader{
+    height: 100%;
+    top: 0;
+}
+#bookShowHeader {
+    width: 100%;
+    text-align: center;
+    font-size: x-large;
+    background-color: #c0bbbb;
+    top: 0;
+}
+
+#bookShowContent {
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    top: 0;
+}
+
+.rateBtn {
+    color: white;
+    background-color: blueviolet;
+    width: 35px;
+    border: none;
+}
+#rateValueLabel{
+    padding-left:10px;
+    padding-right: 10px;
+}
+#closeShowbook {
+    color: black;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 10;
+}
+
+#closeShowbook:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+#bookImg {
+    height: 200px;
+    width: 100px;
+}
+
+#booklistShow {
     width: 70%;
 }
+
 #bookslist {
     width: 100%;
     border-collapse: collapse;
 }
-#bookslistTable{
+
+#bookslistTable {
     width: 100%;
 }
-.bookListTh{
+
+#booklistTbody tr {
+    cursor: default;
+    background-color: white;
+}
+
+.bookListTh {
     padding: 8px;
     text-align: left;
     background-color: #c0bbbb;
-    cursor: pointer; 
+    cursor: default;
 }
-.bookListTd
-{
+
+.bookListTd {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
+    cursor: default;
 }
 
 .sort-arrow {
     margin-left: 5px;
     font-size: 12px;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 .crud-options {
@@ -86,43 +164,62 @@
     font-size: 20px;
 }
 
+.crud-option {
+    cursor: pointer;
+}
+
 .crud-option:hover {
     color: red;
 }
-#listScroll{
+
+#listScroll {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding-top: 10px;
 }
-.scrollBtn{
+
+.scrollBtn {
     background-color: blueviolet;
     color: white;
-    width: 20%;
-   
+    border: none;
+    width: 15%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+
 }
 
 
 /* Modal */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     position: fixed;
-    z-index: 3; /* On top of other content */
+    z-index: 3;
+    /* On top of other content */
     left: 0;
     top: 0;
     width: 30%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Sheer black background */
-    backdrop-filter: blur(5px);
 }
 
 /* Modal Content Wrapper */
 .modal-content-wrapper {
-    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20%;
+    /* Adjust width as needed */
+    background-color: #444;
+    /* Dark background */
+    padding: 30px;
     border-radius: 10px;
-    width: 80%;
-    max-width: 700px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    color: white;
+    /* White text */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    /* Ensure it stays above other content */
 }
 
 /* Modal Content */
@@ -134,7 +231,47 @@
     object-fit: contain;
     margin-bottom: 20px;
     padding: 10px;
-    
+
+}
+
+/* Space between form elements */
+.popLabel {
+    display: block;
+    margin-bottom: 10px;
+    /* Space below each label */
+    color: white;
+    /* White text for labels */
+}
+
+#popParagraph {
+    font-size: x-large;
+}
+
+.popInput {
+    width: 100%;
+    /* Full width input fields */
+    padding: 10px;
+    margin-bottom: 20px;
+    /* Space below each input */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.popBtn {
+    background-color: blueviolet;
+    /* Button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.popBtn:hover {
+    background-color: #5a1d80;
+    /* Darker hover effect */
 }
 
 /* The Close Button */
@@ -156,3 +293,40 @@
     cursor: pointer;
 }
 
+/* Media query for small screens (max-width: 600px) */
+@media screen and (max-width: 600px) {
+    #bookShow {
+        position: fixed;
+        /* Fix the position at the top */
+        top: 0;
+        left: 0;
+        width: 70%;
+        /* Make it full width */
+        z-index: 20;
+        /* Ensure it's above other content */
+    }
+
+    #booklistShow {
+        width: 100%;
+        /* Make the book list full width */
+        margin-top: 100px;
+        /* Add margin to avoid overlap with book show */
+    }
+
+    #bookslistTable {
+        width: 100%;
+        /* Ensure the table is full width */
+    }
+
+    #bookShowContent {
+        background-color: white;
+        /* Keep the light gray background */
+        width: 100%;
+        /* Ensure it takes full width */
+    }
+
+    .modal-content-wrapper {
+        width: 90%;
+        /* Adjust for smaller screens */
+    }
+}
