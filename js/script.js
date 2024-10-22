@@ -139,6 +139,10 @@ function addBook(book) {
 }
 
 function readBook(book) {
+    let storedBooks = localStorage.getItem('books');
+    books = storedBooks ? JSON.parse(storedBooks) : [];
+    const existingItem = books.find(bookItem => bookItem.id === book.id);
+    
     const bookShowContent = document.getElementById("bookShowContent");
     const bookHeader = document.getElementById("bookHeader");
     const bookImg = document.getElementById("bookimg").getElementsByTagName("img")[0];
@@ -148,7 +152,10 @@ function readBook(book) {
     bookHeader.textContent = book.title;
     bookImg.src = book.img || '';
     priceValue.textContent = book.price;
-    rateValueLabel.innerText = book.rate || 0;
+    if (existingItem) {
+        rateValueLabel.innerText = existingItem.rate || 0;
+    }
+  
 
     document.getElementById('closeShowbook').addEventListener('click', () => {
         bookShowContent.style.display = 'none';
@@ -171,7 +178,37 @@ function readBook(book) {
     bookShowContent.style.display = "block";
 }
 
+function changeRate(change, book) {
+    let storedBooks = localStorage.getItem('books');
+    let books = storedBooks ? JSON.parse(storedBooks) : [];
 
+    // Find the book in the stored books
+    const bookIndex = books.findIndex(bookItem => bookItem.id === book.id);
+
+    if (bookIndex !== -1) {
+        // Update current rate based on button click
+        let currentRate = books[bookIndex].rate || 0; // Default to 0 if no rate exists
+        currentRate += change;
+
+        // Ensure the rate stays within the desired limits (0-10)
+        if (currentRate < 0) {
+            currentRate = 0;
+        } else if (currentRate > 10) {
+            currentRate = 10;
+        }
+
+        // Update the displayed rate value
+        document.getElementById("rateValueLabel").innerText = currentRate;
+
+        // Update the rate value of the book
+        books[bookIndex].rate = currentRate;
+
+        // Save the updated books to localStorage
+        localStorage.setItem('books', JSON.stringify(books));
+    } else {
+        console.error('Book not found in localStorage.');
+    }
+}
 
 function updateBook(book) {
     let storedBooks = localStorage.getItem('books');
@@ -374,34 +411,3 @@ function sortBooks(property) {
 
 
 
-function changeRate(change, book) {
-    let storedBooks = localStorage.getItem('books');
-    let books = storedBooks ? JSON.parse(storedBooks) : [];
-
-    // Find the book in the stored books
-    const bookIndex = books.findIndex(bookItem => bookItem.id === book.id);
-
-    if (bookIndex !== -1) {
-        // Update current rate based on button click
-        let currentRate = books[bookIndex].rate || 0; // Default to 0 if no rate exists
-        currentRate += change;
-
-        // Ensure the rate stays within the desired limits (0-10)
-        if (currentRate < 0) {
-            currentRate = 0;
-        } else if (currentRate > 10) {
-            currentRate = 10;
-        }
-
-        // Update the displayed rate value
-        document.getElementById("rateValueLabel").innerText = currentRate;
-
-        // Update the rate value of the book
-        books[bookIndex].rate = currentRate;
-
-        // Save the updated books to localStorage
-        localStorage.setItem('books', JSON.stringify(books));
-    } else {
-        console.error('Book not found in localStorage.');
-    }
-}
