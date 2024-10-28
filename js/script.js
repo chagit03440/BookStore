@@ -259,6 +259,12 @@ function deleteBook(book) {
     }
 }
 function showForm(type, book = null) {
+    // Remove any existing modal
+    const existingModal = document.getElementById("myModal");
+    if (existingModal) {
+        existingModal.remove();
+    }
+
     const modalContentWrapper = document.createElement('div');
     modalContentWrapper.classList.add('modal-content-wrapper');
 
@@ -285,82 +291,93 @@ function showForm(type, book = null) {
     const popParagraph = document.createElement('p');
     popParagraph.id = "popParagraph";
     popParagraph.classList.add('popContent');
-    popParagraph.innerText = type === 'Add' ? '+ New Book' : 'Update Book'; // Title based on form type
+    popParagraph.innerText = type === 'Add' ? '+ New Book' : 'Update Book';
 
-    popContent.appendChild(popParagraph); // Add the title to the form first
+    popContent.appendChild(popParagraph);
 
-    // Only show the Id label and input when adding a new book
+    // Only show the Id input for 'Add'
+    let popIdInput;
     if (type === 'Add') {
         const popIdLabel = document.createElement('label');
         popIdLabel.id = "popIdLabel";
         popIdLabel.classList.add('popLabel');
         popIdLabel.innerText = "Id";
 
-        const popIdInput = document.createElement('input');
+        popIdInput = document.createElement('input');
         popIdInput.id = "popIdInput";
         popIdInput.classList.add('popInput');
         popIdInput.type = "text";
 
-        // Append the input to the label (this step was missing in the original code)
         popContent.appendChild(popIdLabel);
-        popContent.appendChild(popIdInput); // Correct place to append the input
+        popContent.appendChild(popIdInput);
     }
 
     const popTitleLabel = document.createElement('label');
     popTitleLabel.id = "popTitleLabel";
     popTitleLabel.classList.add('popLabel');
     popTitleLabel.innerText = "Title";
+
     const popTitleInput = document.createElement('input');
     popTitleInput.id = "popTitleInput";
     popTitleInput.classList.add('popInput');
     popTitleInput.type = "text";
-    popTitleInput.value = book ? book.title : ''; // Prefill if updating
-    popTitleLabel.appendChild(popTitleInput);
+    popTitleInput.value = book ? book.title : ''; 
+
+    popContent.appendChild(popTitleLabel);
+    popContent.appendChild(popTitleInput);
 
     const popPriceLabel = document.createElement('label');
     popPriceLabel.id = "popPriceLabel";
     popPriceLabel.classList.add('popLabel');
     popPriceLabel.innerText = "Price";
+
     const popPriceInput = document.createElement('input');
     popPriceInput.id = "popPriceInput";
     popPriceInput.classList.add('popInput');
     popPriceInput.type = "text";
-    popPriceInput.value = book ? book.price : ''; // Prefill if updating
-    popPriceLabel.appendChild(popPriceInput);
+    popPriceInput.value = book ? book.price : ''; 
+
+    popContent.appendChild(popPriceLabel);
+    popContent.appendChild(popPriceInput);
 
     const popImgUrlLabel = document.createElement('label');
     popImgUrlLabel.id = "popImgUrlLabel";
     popImgUrlLabel.classList.add('popLabel');
     popImgUrlLabel.innerText = "Cover Image URL";
+
     const popImgUrlInput = document.createElement('input');
     popImgUrlInput.id = "popImgUrlInput";
     popImgUrlInput.classList.add('popInput');
     popImgUrlInput.type = "text";
-    popImgUrlInput.value = book ? book.img : ''; // Prefill if updating
-    popImgUrlLabel.appendChild(popImgUrlInput);
+    popImgUrlInput.value = book ? book.img : ''; 
+
+    popContent.appendChild(popImgUrlLabel);
+    popContent.appendChild(popImgUrlInput);
 
     const popBtn = document.createElement('button');
     popBtn.id = "popBtn";
     popBtn.classList.add('popBtn');
-    popBtn.innerText = type === 'Add' ? 'Add' : 'Update'; // Button text based on form type
+    popBtn.innerText = type === 'Add' ? 'Add' : 'Update';
 
-    // Attach the correct event listener based on form type
+    // Attach the appropriate event listener based on form type
     if (type === 'Add') {
         popBtn.addEventListener('click', (event) => {
             event.preventDefault();
-            addBook({
-                id: popIdInput.value, 
-                title: popTitleInput.value,
-                price: popPriceInput.value,
-                img: popImgUrlInput.value
-            });
-            modal.style.display = "none"; // Close the modal
+            if (popIdInput) {
+                addBook({
+                    id: popIdInput.value,
+                    title: popTitleInput.value,
+                    price: popPriceInput.value,
+                    img: popImgUrlInput.value
+                });
+                modal.style.display = "none"; // Close the modal
+            }
         });
     } else if (type === 'Update') {
         popBtn.addEventListener('click', (event) => {
             event.preventDefault();
             updateBook({
-                id: book.id, // Use the original book's id for the update
+                id: book.id,
                 title: popTitleInput.value,
                 price: popPriceInput.value,
                 img: popImgUrlInput.value
@@ -368,24 +385,19 @@ function showForm(type, book = null) {
             modal.style.display = "none"; // Close the modal
         });
     }
-    // Append everything to the modal content
-    popContent.appendChild(popTitleLabel);
-    popContent.appendChild(popPriceLabel);
-    popContent.appendChild(popImgUrlLabel);
+
     popContent.appendChild(popBtn);
     modalContentWrapper.appendChild(popNav);
     modalContentWrapper.appendChild(popContent);
     modal.appendChild(modalContentWrapper);
 
-    // Append the modal to the body
     document.body.appendChild(modal);
-
-    // Show the modal
     modal.style.display = "block";
 }
 
 
-// Sort function (existing code)
+
+// Sort function
 let titleSortDirection = true; // true for ascending, false for descending
 let priceSortDirection = true;
 
